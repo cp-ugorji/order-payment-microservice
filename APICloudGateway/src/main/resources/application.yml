@@ -17,7 +17,7 @@ spring:
                       - name: CircuitBreaker
                         args:
                             name: order-service
-                            fallbackuri: forward:/api/v1/order/orderFallback
+                            fallbackuri: forward:/orderFallback
                             
                 - id: payment-service
                   uri: lb://PAYMENT-SERVICE
@@ -27,7 +27,7 @@ spring:
                       - name: CircuitBreaker
                         args:
                             name: payment-service
-                            fallbackuri: forward:/api/v1/order/paymentFallback
+                            fallbackuri: forward:/paymentFallback
                             
 eureka:
     client:
