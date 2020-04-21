@@ -37,7 +37,7 @@ public class OrderService {
         payment.setOrderId(orderRequest.getOrder().getId());
         payment.setAmount(orderRequest.getOrder().getAmount());
         log.info("Modified Order Request => " + orderRequest);
-        log.info("Modified Payment Request => " + orderRequest);
+        log.info("Modified Payment Request => " + payment);
         
         //call payment microservice using rest template
         //we can as well use apache kafka for async benefit
