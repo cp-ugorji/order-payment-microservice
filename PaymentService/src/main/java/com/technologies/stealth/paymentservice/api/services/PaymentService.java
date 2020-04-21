@@ -32,6 +32,10 @@ public class PaymentService {
         return _paymentRepository.save(payment);
     }
     
+    public Payment getByOrderId(int orderId){
+        return _paymentRepository.findByOrderId(orderId);
+    }
+    
     private String processPayment(){
         //this should probably be a 3rd party intgration to payment gateways like stripe, paypal, paystack, rave(flutterwave) etc
         return new Random().nextBoolean() ? "successful" : "failed";

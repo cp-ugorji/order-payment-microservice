@@ -9,6 +9,8 @@ import com.technologies.stealth.paymentservice.api.entities.Payment;
 import com.technologies.stealth.paymentservice.api.services.PaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,5 +35,10 @@ public class PaymentController {
     public Payment doPayment(@RequestBody Payment payment){
         log.info("Initial Payment Request => " + payment);
         return _paymentService.makePayment(payment);
+    }
+    
+    @GetMapping("/getPaymentByOrder/{orderId}")
+    public Payment getPaymentByOrderId(@PathVariable int orderId){
+        return _paymentService.getByOrderId(orderId);
     }
 }
