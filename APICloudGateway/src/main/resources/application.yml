@@ -1,9 +1,11 @@
 ## YAML Template.
 server:
     port: 9190
+    
 spring:
     application:
         name: GATEWAY-SERVICE
+        
     cloud:
         gateway:
             routes:
@@ -11,15 +13,42 @@ spring:
                   uri: lb://ORDER-SERVICE
                   predicates:
                       - Path=/api/v1/order/**
+                  filters:
+                      - name: CircuitBreaker
+                        args:
+                            name: order-service
+                            fallbackuri: forward:/api/v1/order/orderFallback
+                            
                 - id: payment-service
                   uri: lb://PAYMENT-SERVICE
                   predicates:
                       - Path=/api/v1/payment/**
+                  filters:
+                      - name: CircuitBreaker
+                        args:
+                            name: payment-service
+                            fallbackuri: forward:/api/v1/order/paymentFallback
+                            
 eureka:
     client:
         register-with-eureka: true
         fetch-registry: true
         service-url:
             defaultZone: http://localhost:8761/eureka/
+            
     instance:
         hostname: localhost
+        
+management:
+    endpoints:
+        web:
+            exposure:
+                include: hystrix.stream
+                
+hystrix:
+    command:
+        fallbackcmd:
+            execution:
+                isolation:
+                    thread:
+                        timeoutInMilliseconds: 5000
