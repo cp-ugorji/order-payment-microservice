@@ -41,8 +41,7 @@ public class OrderService {
         
         //call payment microservice using rest template
         //we can as well use apache kafka for async benefit
-//        Payment paymentResponse = _restTemplate.postForObject("http://PAYMENT-SERVICE/api/v1/payment/dopayment", orderRequest.getPayment(), Payment.class);
-        Payment paymentResponse = _restTemplate.postForObject("http://localhost:9192/api/v1/payment/dopayment", payment, Payment.class);
+        Payment paymentResponse = _restTemplate.postForObject("http://PAYMENT-SERVICE/api/v1/payment/dopayment", payment, Payment.class);
         
         //check if payment was successful or not
         String message = paymentResponse.getPaymentStatus().equalsIgnoreCase("successful") ? "Payment was successful and order has been made." : "Payment failed thus order has been added to cart";
