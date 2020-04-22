@@ -12,6 +12,9 @@ import com.technologies.stealth.orderservice.api.models.Payment;
 import com.technologies.stealth.orderservice.api.repositories.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,9 +24,18 @@ import org.springframework.web.client.RestTemplate;
  */
 @Service
 @Slf4j
+@RefreshScope
 public class OrderService {
     private final OrderRepository _orderRepository;
+    @Lazy
     private final RestTemplate _restTemplate;
+    
+    //getting the payment service endpoint to be used for payment from the config server service
+    //so that if the url changes at anytime, we don't need to come to the code to edit anything.
+    //we just edit the payment service endpoint in the application.yml file of the config server service(git)
+    //note that microservice.payment-service.endpoints.endpoint.uri is the key that holds the url in our config server application.yml file
+    @Value("${microservice.payment-service.endpoints.endpoint.uri}")
+    private String paymentServiceEndpointUrl;
     
     @Autowired
     public OrderService(OrderRepository orderRepository, RestTemplate restTemplate){
@@ -41,7 +53,8 @@ public class OrderService {
         
         //call payment microservice using rest template
         //we can as well use apache kafka for async benefit
-        Payment paymentResponse = _restTemplate.postForObject("http://PAYMENT-SERVICE/api/v1/payment/dopayment", payment, Payment.class);
+//        Payment paymentResponse = _restTemplate.postForObject("http://PAYMENT-SERVICE/api/v1/payment/dopayment", payment, Payment.class);
+        Payment paymentResponse = _restTemplate.postForObject(paymentServiceEndpointUrl, payment, Payment.class);
         
         //check if payment was successful or not
         String message = paymentResponse.getPaymentStatus().equalsIgnoreCase("successful") ? "Payment was successful and order has been made." : "Payment failed thus order has been added to cart";
