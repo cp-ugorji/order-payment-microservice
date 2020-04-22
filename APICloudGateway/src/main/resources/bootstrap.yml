@@ -1,0 +1,8 @@
+## YAML Template.
+## this file will load first before the application.yml file load so it is wise to have the gateway service 
+## read the cloud service configuration from here
+spring:
+    # this is us configuring the gateway service to read properties from the config server service
+    cloud:
+        config:
+            uri: http://localhost:9194
