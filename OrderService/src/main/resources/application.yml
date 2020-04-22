@@ -7,11 +7,20 @@ spring:
             enabled: true
     application:
         name: ORDER-SERVICE
-eureka:
-    client:
-        register-with-eureka: true
-        fetch-registry: true
-        service-url:
-            defaultZone: http://localhost:8761/eureka/
-    instance:
-        hostname: localhost
+# this is us configuring the order service to read properties from the config server service
+# better still, since the boostrap.yml loads first before this application.yml file,
+# it is better to have the cloud config setup placed there thus my creating of the bootstrap.yml file
+# and moving the commented cloud.config.url there
+#    cloud:
+#        config:
+#            uri: http://localhost:9194
+        
+# below was removed because we already have it configured in our config server so we just have to make this service read from the config server as added above        
+#eureka:
+#    client:
+#        register-with-eureka: true
+#        fetch-registry: true
+#        service-url:
+#            defaultZone: http://localhost:8761/eureka/
+#    instance:
+#        hostname: localhost
