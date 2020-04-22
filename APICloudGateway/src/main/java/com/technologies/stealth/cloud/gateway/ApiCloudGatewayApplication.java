@@ -10,6 +10,9 @@ import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 @EnableHystrix
 public class ApiCloudGatewayApplication {
 
+    //http://localhost:9190/actuator/hystrix.stream is the endpoint to access to see the hystrix stream on the gateway
+    //you should see something like data:{"type":"ping"}
+    //if hystrix and actuator are all fine 
     public static void main(String[] args) {
         SpringApplication.run(ApiCloudGatewayApplication.class, args);
     }
