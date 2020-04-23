@@ -44,17 +44,18 @@ public class OrderService {
     }
     
     public OrderResponse makeOrder(OrderRequest orderRequest){
-        log.info("Initial Order Request => " + orderRequest);
+//        log.info("Initial Order Request => " + orderRequest);
         Payment payment = orderRequest.getPayment();
         payment.setOrderId(orderRequest.getOrder().getId());
         payment.setAmount(orderRequest.getOrder().getAmount());
-        log.info("Modified Order Request => " + orderRequest);
-        log.info("Modified Payment Request => " + payment);
+        log.info("Order Request => {}", orderRequest);
+//        log.info("Modified Payment Request => " + payment);
         
         //call payment microservice using rest template
         //we can as well use apache kafka for async benefit
 //        Payment paymentResponse = _restTemplate.postForObject("http://PAYMENT-SERVICE/api/v1/payment/dopayment", payment, Payment.class);
         Payment paymentResponse = _restTemplate.postForObject(paymentServiceEndpointUrl, payment, Payment.class);
+        log.info("Payment Response From Order Service RestTemplate Call => {}", paymentResponse);
         
         //check if payment was successful or not
         String message = paymentResponse.getPaymentStatus().equalsIgnoreCase("successful") ? "Payment was successful and order has been made." : "Payment failed thus order has been added to cart";
@@ -63,7 +64,9 @@ public class OrderService {
         //get order from the request and save
         //Order order = orderRequest.getOrder();
         Order newOrder = _orderRepository.save(orderRequest.getOrder());
-        
-        return new OrderResponse(statusCode, message, newOrder, paymentResponse.getTransactionId(), paymentResponse.getAmount());
+        OrderResponse response = new OrderResponse(statusCode, message, newOrder, paymentResponse.getTransactionId(), paymentResponse.getAmount());
+        log.info("Order Response => {}", response);
+//        return new OrderResponse(statusCode, message, newOrder, paymentResponse.getTransactionId(), paymentResponse.getAmount());
+        return response;
     }
 }

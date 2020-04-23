@@ -28,12 +28,16 @@ public class PaymentService {
     public Payment makePayment(Payment payment){
         payment.setPaymentStatus(processPayment());
         payment.setTransactionId(UUID.randomUUID().toString());
-        log.info("Payment Request => " + payment);
+        log.info("Payment Request => {}", payment);
         return _paymentRepository.save(payment);
     }
     
     public Payment getByOrderId(int orderId){
-        return _paymentRepository.findByOrderId(orderId);
+        log.info("Payment Request getByOrderId => {}", orderId);
+        Payment response = _paymentRepository.findByOrderId(orderId);
+        log.info("Payment Response getByOrderId => {}", response);
+//        return _paymentRepository.findByOrderId(orderId);
+        return response;
     }
     
     private String processPayment(){
